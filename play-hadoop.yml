@@ -1,0 +1,96 @@
+---
+ 
+ #
+ # Install and configure cluster
+ #
+
+ - hosts: all
+   
+   vars:
+     namenode_hostname: '{{hostvars["namenode"].hostname}}' 
+     secondarynamenode_hostname: '{{hostvars["namenode"].hostname}}'
+     manager_hostname: '{{hostvars["manager"].hostname}}'
+     number_of_datanodes: '{{groups.datanode | length}}'
+     data_replication_factor: '{{[2, number_of_datanodes] | min}}'
+   
+   tasks:
+   
+   - name: Unpack Hadoop binaries
+     unarchive:
+       copy: yes
+       src: .data/hadoop-{{hadoop.version}}.tar.gz
+       dest: /usr/local
+       creates: /usr/local/hadoop-{{hadoop.version}}
+       owner: hadoop
+       group: hadoop
+   
+   - name: Link to /usr/local/hadoop
+     file: src=/usr/local/hadoop-{{hadoop.version}} dest=/usr/local/hadoop state=link   
+   
+   - file: path=/var/local/hadoop state=directory mode=0775 owner=hadoop group=hadoop 
+   - file: path=/var/local/hadoop/dfs state=directory mode=0775 owner=hadoop group=hadoop 
+   - file: path=/var/local/hadoop/logs state=directory mode=0774 owner=hadoop group=hadoop 
+   - file: path=/var/run/hadoop state=directory mode=0774 owner=hadoop group=hadoop 
+   
+   - file: path=/etc/hadoop state=directory mode=0775 owner=hadoop group=hadoop 
+
+   - name: Set JAVA_HOME in system-wide profile
+     copy: src=files/profile.d/set-java-home.sh dest=/etc/profile.d/set-java-home.sh mode=0744
+   
+   - name: Set HADOOP_PREFIX in system-wide profile
+     copy: src=files/profile.d/set-hadoop-prefix.sh dest=/etc/profile.d/set-hadoop-prefix.sh mode=0744
+
+   - name: Copy default configuration under /etc/hadoop
+     shell: cp -vr -u /usr/local/hadoop/etc/hadoop/* /etc/hadoop/
+     become: yes
+     become_user: 'hadoop'
+   
+   - name: Set JAVA_HOME for Hadoop environment
+     lineinfile: 
+       dest: /etc/hadoop/hadoop-env.sh
+       regexp: "^export\\s+JAVA_HOME="
+       line: 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64'
+
+   - name: Set HADOOP_PID_DIR for Hadoop environment
+     lineinfile:
+       dest: /etc/hadoop/hadoop-env.sh
+       regexp: "^[#]?export\\s+HADOOP_PID_DIR="
+       line: 'export HADOOP_PID_DIR=/var/run/hadoop'
+   
+   - name: Set HADOOP_LOG_DIR for Hadoop environment
+     lineinfile:
+       dest: /etc/hadoop/hadoop-env.sh
+       regexp: "^[#]?export\\s+HADOOP_LOG_DIR="
+       line: 'export HADOOP_LOG_DIR=/var/local/hadoop/logs'
+
+   - name: Generate configuration under /etc/hadoop
+     template: src=templates/etc/hadoop/{{item}} dest=/etc/hadoop/{{item}} owner=hadoop group=hadoop
+     with_items:
+     - 'core-site.xml'
+     - 'hdfs-site.xml'
+     - 'yarn-site.xml'
+     - 'mapred-site.xml'
+     - 'slaves'
+
+ #
+ # Format HDFS filesystem
+ #
+ 
+ - hosts: namenode
+
+   tasks:
+
+   - stat: path=/var/local/hadoop/dfs/name/current
+     register: namenode_dir_stat_result
+
+   - set_fact:
+       namenode_is_formatted: '{{namenode_dir_stat_result.stat.isdir is defined}}'
+
+   - name: Format HDFS filesystem
+     shell: >
+        . /etc/hadoop/hadoop-env.sh && ./bin/hdfs namenode -format -nonInteractive
+     args:
+       chdir: /usr/local/hadoop
+     become: yes
+     become_user: hadoop
+     when: not namenode_is_formatted

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <!-- Configuration for MapReduce Applications -->
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+    <description>The runtime framework for executing MapReduce jobs. Can be one of local, classic or yarn.</description>
+  </property>
+  <property>
+    <name>mapreduce.map.memory.mb</name>
+    <value>1024</value>
+    <description>The amount of memory to request from the scheduler for each map task. </description>
+  </property>
+  <property>
+    <name>mapreduce.map.java.opts</name>
+    <value>-Xmx762M</value>
+    <description>Heap-size for child jvms of maps.</description>
+  </property>
+  <property>
+    <name>mapreduce.reduce.memory.mb</name>
+    <value>1536</value>
+    <description>Resource limit for reduces.</description>
+  </property>
+  <property>
+    <name>mapreduce.reduce.java.opts</name>
+    <value>-Xmx1024M</value>
+    <description>Heap-size for child jvms of reduces.</description>
+  </property>
+  <property>
+    <name>mapreduce.task.io.sort.mb</name>
+    <value>256</value>
+    <description>The total amount of buffer memory to use while sorting files, in megabytes. By default, gives each merge stream 1MB, which should minimize seeks. Higher memory-limit while sorting data for efficiency.</description>
+  </property>
+  <property>
+    <name>mapreduce.task.io.sort.factor</name>
+    <value>100</value>
+    <description>The number of streams to merge at once while sorting files. This determines the number of open file handles. More streams merged at once while sorting files. Default 10.</description>
+  </property>
+  <property>
+    <name>mapreduce.reduce.shuffle.parallelcopies</name>
+    <value>50</value>
+    <description>The default number of parallel transfers run by reduce during the copy(shuffle) phase. Default 5.Higher number of parallel copies run by reduces to fetch outputs from very large number of maps.</description>
+  </property>
+  <!-- Configuration for MapReduce JobHistory Server -->
+  <property>
+    <name>mapreduce.jobtracker.address</name>
+    <value>local</value>
+    <description>The host and port that the MapReduce job tracker runs at.  If "local", then jobs are run in-process as a single map and reduce task.
+        </description>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.address</name>
+    <value>{{manager_hostname}}:10020</value>
+    <description>MapReduce JobHistory Server IPC host:port. Default port is 10020.</description>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.webapp.address</name>
+    <value>{{manager_hostname}}:19888</value>
+    <description>MapReduce JobHistory Server Web UI host:port. Default port is 19888.</description>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.staging-dir</name>
+    <value>/tmp/hadoop-yarn/staging</value>
+    <description>The staging dir used while submitting jobs.</description>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.intermediate-done-dir</name>
+    <value>${yarn.app.mapreduce.am.staging-dir}/history/done_intermediate</value>
+    <description>Directory where history files are written by MapReduce jobs.</description>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.done-dir</name>
+    <value>${yarn.app.mapreduce.am.staging-dir}/history/done</value>
+    <description>Directory where history files are managed by the MR JobHistory Server.</description>
+  </property>
+</configuration>

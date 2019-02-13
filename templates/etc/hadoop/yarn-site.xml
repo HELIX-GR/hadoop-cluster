@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<configuration>
+  <!-- Configurations for ResourceManager and NodeManager -->
+  <property>
+    <name>yarn.acl.enable</name>
+    <value>false</value>
+    <description>Are acls enabled.</description>
+  </property>
+  <property>
+    <name>yarn.admin.acl</name>
+    <value>hadoop</value>
+    <description>ACL to set admins on the cluster. ACLs are of for comma-separated-usersspacecomma-separated-groups. Defaults to special value of * which means anyone. Special value of just space means no one has access.</description>
+  </property>
+  <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>false</value>
+    <description>Whether to enable log aggregation. Log aggregation collects each container's logs and moves these logs onto a file-system, for e.g. HDFS, after the application completes. Users can configure the "yarn.nodemanager.remote-app-log-dir" and "yarn.nodemanager.remote-app-log-dir-suffix" properties to determine where these logs are moved to. Users can access the logs via the Application Timeline Server.</description>
+  </property>
+  <!-- Configuration for ResourceManager -->
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>{{manager_hostname}}</value>
+    <description>The hostname of the Resource Manager.</description>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.address</name>
+    <value>${yarn.resourcemanager.hostname}:8032</value>
+    <description>The address of the applications manager interface in the RM.</description>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.scheduler.address</name>
+    <value>${yarn.resourcemanager.hostname}:8030</value>
+    <description>The address of the scheduler interface.</description>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.address</name>
+    <value>${yarn.resourcemanager.hostname}:8031</value>
+    <description>Resource tracker address. If set, overrides the hostname set in yarn.resourcemanager.hostname.</description>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.admin.address</name>
+    <value>${yarn.resourcemanager.hostname}:8033</value>
+    <description>The address of the RM admin interface.</description>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.address</name>
+    <value>${yarn.resourcemanager.hostname}:8088</value>
+    <description>The http address of the RM web application.</description>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.scheduler.class</name>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
+    <description>The class to use as the resource scheduler.</description>
+  </property>
+  <property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value>1024</value>
+    <description>Minimum limit of memory to allocate to each container request at the Resource Manager.</description>
+  </property>
+  <property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value>4096</value>
+    <description>Maximum limit of memory to allocate to each container request at the Resource Manager.</description>
+  </property>
+  <property>
+    <name>yarn.scheduler.minimum-allocation-vcores</name>
+    <value>1</value>
+    <description>The minimum allocation for every container request at the RM, in terms of virtual CPU cores. Requests lower than this won't take effect, and the specified value will get allocated the minimum.</description>
+  </property>
+  <property>
+    <name>yarn.scheduler.maximum-allocation-vcores</name>
+    <value>4</value>
+    <description>The maximum allocation for every container request at the RM, in terms of virtual CPU cores. Requests higher than this won't take effect, and will get capped to this value.</description>
+  </property>
+  <!-- Configurations for NodeManager -->
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>8192</value>
+    <description>Amount of physical memory, in MB, that can be allocated for containers.</description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.vmem-pmem-ratio</name>
+    <value>2.1</value>
+    <description>The virtual memory usage of each task may exceed its physical memory limit by this ratio. The total amount of virtual memory used by tasks on the NodeManager may exceed its physical memory usage by this ratio.</description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.resource.cpu-vcores</name>
+    <value>4</value>
+    <description>Number of CPU cores that can be allocated for containers.</description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.local-dirs</name>
+    <value>${hadoop.tmp.dir}/nm-local-dir</value>
+    <description>	List of directories to store localized files in. An application's localized file directory will be found in: ${yarn.nodemanager.local-dirs}/usercache/${user}/appcache/application_${appid}. Individual containers' work directories, called container_${contid}, will be subdirectories of this. Comma-separated list of paths on the local filesystem where intermediate data is written. Multiple paths help spread disk i/o.</description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.log-dirs</name>
+    <value>${yarn.log.dir}/userlogs</value>
+    <description>Comma-separated list of paths on the local filesystem where logs are written. Multiple paths help spread disk i/o.</description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.log.retain-seconds</name>
+    <value>10800</value>
+    <description>Time in seconds to retain user logs. Only applicable if log aggregation is disabled.</description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.remote-app-log-dir</name>
+    <value>/logs</value>
+    <description>HDFS directory where the application logs are moved on application completion. Need to set appropriate permissions. Only applicable if log-aggregation is enabled.</description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.remote-app-log-dir-suffix</name>
+    <value>logs</value>
+    <description>The remote log dir will be created at {yarn.nodemanager.remote-app-log-dir}/${user}/{thisParam}.</description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+    <description>Shuffle service that needs to be set for Map Reduce applications.</description>
+  </property>
+  <!-- Configurations for History Server -->
+  <property>
+    <name>yarn.log-aggregation.retain-seconds</name>
+    <value>-1</value>
+    <description>How long to keep aggregation logs before deleting them. -1 disables. Be careful set this too small and you will spam the name node.</description>
+  </property>
+  <property>
+    <name>yarn.log-aggregation.retain-check-interval-seconds</name>
+    <value>-1</value>
+    <description>How long to wait between aggregated log retention checks. If set to 0 or a negative value then the value is computed as one-tenth of the aggregated log retention time. Be careful set this too small and you will spam the name node.</description>
+  </property>
+  <!-- Timeline Server Configuration -->
+  <property>
+    <description>The hostname of the Timeline service web application.</description>
+    <name>yarn.timeline-service.hostname</name>
+    <value>{{manager_hostname}}</value>
+  </property>
+  <property>
+    <description>Address for the Timeline server to start the RPC server.</description>
+    <name>yarn.timeline-service.address</name>
+    <value>${yarn.timeline-service.hostname}:10200</value>
+  </property>
+  <property>
+    <description>The http address of the Timeline service web application.</description>
+    <name>yarn.timeline-service.webapp.address</name>
+    <value>${yarn.timeline-service.hostname}:8188</value>
+  </property>
+  <property>
+    <description>The https address of the Timeline service web application.</description>
+    <name>yarn.timeline-service.webapp.https.address</name>
+    <value>${yarn.timeline-service.hostname}:8190</value>
+  </property>
+  <property>
+    <description>Handler thread count to serve the client RPC requests.</description>
+    <name>yarn.timeline-service.handler-thread-count</name>
+    <value>10</value>
+  </property>
+  <property>
+    <name>yarn.timeline-service.http-cross-origin.enabled</name>
+    <value>false</value>
+    <description>Enables cross-origin support (CORS) for web services where cross-origin web response headers are needed. For example, javascript making
+      a web services request to the timeline server.</description>
+  </property>
+  <property>
+    <name>yarn.timeline-service.http-cross-origin.allowed-origins</name>
+    <value>*</value>
+    <description>Comma separated list of origins that are allowed for web services needing cross-origin (CORS) support. Wildcards (*) and patterns allowed</description>
+  </property>
+  <property>
+    <name>yarn.timeline-service.http-cross-origin.allowed-methods</name>
+    <value>GET,POST,HEAD</value>
+    <description>Comma separated list of methods that are allowed for web services needing cross-origin (CORS) support.</description>
+  </property>
+  <property>
+    <name>yarn.timeline-service.http-cross-origin.allowed-headers</name>
+    <value>X-Requested-With,Content-Type,Accept,Origin</value>
+    <description>Comma separated list of headers that are allowed for web services needing cross-origin (CORS) support.</description>
+  </property>
+  <property>
+    <name>yarn.timeline-service.http-cross-origin.max-age</name>
+    <value>1800</value>
+    <description>The number of seconds a pre-flighted request can be cached for web services needing cross-origin (CORS) support.</description>
+  </property>
+  <!-- Generic Timeline Server data -->
+  <property>
+    <name>yarn.timeline-service.generic-application-history.enabled</name>
+    <value>true</value>
+    <description>Indicate to ResourceManager as well as clients whether history-service is enabled or not. If enabled, ResourceManager starts recording historical data that Timeline service can consume. Similarly, clients can redirect to the history service when applications finish if this is enabled.</description>
+  </property>
+  <property>
+    <name>yarn.timeline-service.generic-application-history.store-class</name>
+    <value>org.apache.hadoop.yarn.server.applicationhistoryservice.FileSystemApplicationHistoryStore</value>
+    <description>Store class name for history store, defaulting to file system store</description>
+  </property>
+  <!-- Framework specific Timeline Server data -->
+  <property>
+    <description>Indicate to clients whether Timeline service is enabled or not. If enabled, the TimelineClient library used by end-users will post entities and events to the Timeline server.</description>
+    <name>yarn.timeline-service.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.system-metrics-publisher.enabled</name>
+    <value>true</value>
+    <description>The setting that controls whether yarn system metrics is published on the timeline server or not by RM.</description>
+  </property>
+  <property>
+    <name>yarn.timeline-service.store-class</name>
+    <value>org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore</value>
+    <description>Store class name for timeline store.</description>
+  </property>
+  <property>
+    <name>yarn.timeline-service.ttl-enable</name>
+    <value>true</value>
+    <description>Enable age off of timeline store data.</description>
+  </property>
+  <property>
+    <description>Time to live for timeline store data in milliseconds.</description>
+    <name>yarn.timeline-service.ttl-ms</name>
+    <value>604800000</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
+    <value>98.5</value>
+  </property>
+</configuration>

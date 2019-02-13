@@ -1,0 +1,15 @@
+---
+
+ - hosts: localhost
+   connection: local
+
+   tasks:
+
+   - file: path=.data state=directory mode=0755 
+
+   - name: Download Hadoop
+     get_url:
+       url: http://apache.otenet.gr/dist/hadoop/common/hadoop-2.9.2/hadoop-{{hadoop.version}}.tar.gz
+       dest: .data/hadoop-{{hadoop.version}}.tar.gz
+       checksum: '{{hadoop.checksum}}'
+

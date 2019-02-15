@@ -22,23 +22,38 @@
   </property>
   <property>
     <name>dfs.namenode.http-address</name>
-    <value>{{namenode_hostname}}:50070</value>
+    <value>{{namenode_host}}:50070</value>
     <description>The namenode http server address and port.</description>
   </property>
   <property>
     <name>dfs.namenode.https-address</name>
-    <value>{{namenode_hostname}}:50071</value>
+    <value>{{namenode_host}}:50071</value>
     <description>The namenode HTTPS server address and port.</description>
   </property>
   <property>
     <name>dfs.namenode.secondary.http-address</name>
-    <value>{{secondarynamenode_hostname}}:50090</value>
+    <value>{{secondarynamenode_host}}:50090</value>
     <description>The secondary namenode http server address and port.</description>
   </property>
   <property>
     <name>dfs.namenode.secondary.https-address</name>
-    <value>{{secondarynamenode_hostname}}:50091</value>
+    <value>{{secondarynamenode_host}}:50091</value>
     <description>The secondary namenode HTTPS server address and port.</description>
+  </property>
+  <property>
+    <name>dfs.datanode.address</name>
+    <value>{{datanode_host}}:50010</value>
+    <description>The datanode server address and port for data transfer.</description>
+  </property>
+  <property>
+    <name>dfs.datanode.http.address</name>
+    <value>{{datanode_host}}:50075</value>
+    <description>The datanode http server address and port.</description>
+  </property>
+  <property>
+    <name>dfs.datanode.ipc.address</name>
+    <value>{{datanode_host}}:50020</value>
+    <description>The datanode ipc server address and port.</description>
   </property>
   <property>
     <name>dfs.blocksize</name>

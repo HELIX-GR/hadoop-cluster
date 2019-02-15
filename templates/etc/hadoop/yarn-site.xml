@@ -19,7 +19,7 @@
   <!-- Configuration for ResourceManager -->
   <property>
     <name>yarn.resourcemanager.hostname</name>
-    <value>{{manager_hostname}}</value>
+    <value>{{manager_host}}</value>
     <description>The hostname of the Resource Manager.</description>
   </property>
   <property>
@@ -133,7 +133,7 @@
   <property>
     <description>The hostname of the Timeline service web application.</description>
     <name>yarn.timeline-service.hostname</name>
-    <value>{{manager_hostname}}</value>
+    <value>{{manager_host}}</value>
   </property>
   <property>
     <description>Address for the Timeline server to start the RPC server.</description>

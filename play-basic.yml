@@ -75,7 +75,7 @@
        group: 'hadoop'
    
    - name: Add node fingerprints to ~hadoop/.ssh/known_hosts
-     shell: ssh-keyscan -H '{{h.hostname}}' >> ~hadoop/.ssh/known_hosts
+     shell: ssh-keyscan -H '{{h.hostname}}' '{{h.fqdn}}' >> ~hadoop/.ssh/known_hosts
      become: yes
      become_user: hadoop
      with_items: '{{groups.all}}'

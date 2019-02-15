@@ -51,12 +51,12 @@
   </property>
   <property>
     <name>mapreduce.jobhistory.address</name>
-    <value>{{manager_hostname}}:10020</value>
+    <value>{{manager_host}}:10020</value>
     <description>MapReduce JobHistory Server IPC host:port. Default port is 10020.</description>
   </property>
   <property>
     <name>mapreduce.jobhistory.webapp.address</name>
-    <value>{{manager_hostname}}:19888</value>
+    <value>{{manager_host}}:19888</value>
     <description>MapReduce JobHistory Server Web UI host:port. Default port is 19888.</description>
   </property>
   <property>

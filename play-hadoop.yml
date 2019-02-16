@@ -15,7 +15,9 @@
 
      number_of_datanodes: '{{groups.datanode | length}}'
      data_replication_factor: '{{[2, number_of_datanodes] | min}}'
-   
+     
+     stop_timeout: 12   
+
    tasks:
    
    - name: Unpack Hadoop binaries
@@ -68,10 +70,13 @@
    
    - name: Set JAVA_HOME for Hadoop environment
      lineinfile: 
-       dest: /etc/hadoop/hadoop-env.sh
-       regexp: "^export\\s+JAVA_HOME="
+       dest: '/etc/hadoop/{{env_file}}'
+       regexp: "^[#]?[\\s]*export\\s+JAVA_HOME="
        line: 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64'
-
+     with_items: ['hadoop-env.sh', 'yarn-env.sh']
+     vars:
+       env_file: '{{item}}'
+ 
    - name: Set HADOOP_PID_DIR for Hadoop environment
      lineinfile:
        dest: /etc/hadoop/hadoop-env.sh
@@ -83,6 +88,26 @@
        dest: /etc/hadoop/hadoop-env.sh
        regexp: "^[#]?export\\s+HADOOP_LOG_DIR="
        line: 'export HADOOP_LOG_DIR=/var/local/hadoop/logs'
+   
+   - name: Set HADOOP_STOP_TIMEOUT for Hadoop environment
+     lineinfile:
+       dest: /etc/hadoop/hadoop-env.sh
+       regexp: "^export\\s+HADOOP_STOP_TIMEOUT="
+       line: 'export HADOOP_STOP_TIMEOUT={{stop_timeout}}'
+
+   - name: Set YARN_LOG_DIR for Yarn environment
+     lineinfile:
+       dest: /etc/hadoop/yarn-env.sh
+       regexp: "^export\\s+YARN_LOG_DIR="
+       line: 'export YARN_LOG_DIR=/var/local/hadoop/logs'
+       insertbefore: "^# Resource[\\s]*Manager specific parameters"
+   
+   - name: Set YARN_STOP_TIMEOUT for Yarn environment
+     lineinfile:
+       dest: /etc/hadoop/yarn-env.sh
+       regexp: "^export\\s+YARN_STOP_TIMEOUT="
+       line: 'export YARN_STOP_TIMEOUT={{stop_timeout}}'
+       insertbefore: "^# Resource[\\s]*Manager specific parameters"
 
    - name: Generate configuration under /etc/hadoop
      template: src=templates/etc/hadoop/{{item}} dest=/etc/hadoop/{{item}} owner=hadoop group=hadoop

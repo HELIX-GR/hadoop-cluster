@@ -1,6 +1,11 @@
-Host localhost 127.0.1.1 127.0.0.1 {{groups.all | map("extract", hostvars, "hostname") | join(" ")}}
+Host *
     PasswordAuthentication no
+
+Host localhost 127.0.1.1 127.0.0.1
     IdentitiesOnly yes
     IdentityFile ~/.ssh/id_rsa
 
+Host {{groups.all| map("extract", hostvars, "fqdn") | join(" ")}} {{groups.all| map("extract", hostvars, "hostname") | join(" ")}}
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_rsa
 

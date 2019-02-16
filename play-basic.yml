@@ -12,7 +12,9 @@
    - debug: var=groups.all
    
    - assert:
-      that: hostname is defined
+      that: 
+      - hostname is defined
+      - fqdn is defined
 
    - apt: update_cache=yes
    
@@ -48,48 +50,71 @@
 
    - file: path=~/bin state=directory
    
-   - copy: src=files/{{item.key}} dest=~/{{item.value}} mode=0644
-     with_dict: { 'profile': '.profile', 'vimrc': '.vimrc' }
+   - copy: src=files/vimrc dest=/etc/vim/vimrc.local mode=0644
+   
+   - copy: src=files/profile dest=~/.profile mode=0644
     
    - authorized_key:
        user: root
        state: present
        key: '{{lookup("file", "keys/id_rsa.pub")}}'
    
-   - user:
-       name: 'hadoop'
-       groups: ['wheel', 'admin']
-       shell: /bin/bash
-       state: present
-   
-   - authorized_key:
-       user: 'hadoop'
-       state: present
-       key: '{{lookup("file", "keys/id_rsa.pub")}}'
-   
-   - copy: 
-       src: keys/id_rsa 
-       dest: ~hadoop/.ssh/id_rsa 
-       mode: '0400' 
-       owner: 'hadoop' 
-       group: 'hadoop'
-   
-   - name: Add node fingerprints to ~hadoop/.ssh/known_hosts
-     shell: ssh-keyscan -H '{{h.hostname}}' '{{h.fqdn}}' >> ~hadoop/.ssh/known_hosts
-     become: yes
-     become_user: hadoop
+   - name: Add fingerprint of self to /etc/ssh/ssh_known_hosts
+     shell: ssh-keyscan -H 'localhost' '127.0.1.1' '127.0.0.1' >/etc/ssh/ssh_known_hosts   
+
+   - name: Add fingerprint of neighbouring hosts to /etc/ssh/ssh_known_hosts
+     shell: ssh-keyscan -H '{{h.hostname}}' '{{h.fqdn}}' >>/etc/ssh/ssh_known_hosts
      with_items: '{{groups.all}}'
      vars:
        h: '{{hostvars[item]}}'
-
-   - name: Add self to ~hadoop/.ssh/known_hosts
-     shell: ssh-keyscan -H 'localhost' '127.0.1.1' '127.0.0.1' >> ~hadoop/.ssh/known_hosts   
-     become: yes
-     become_user: hadoop
-
-   - copy: src=files/{{item.key}} dest=~hadoop/{{item.value}} mode=0644 owner=hadoop group=hadoop
-     with_dict: { 'profile': '.profile', 'vimrc': '.vimrc' }
    
-   - template: src=templates/etc/ssh-config dest=~hadoop/.ssh/config mode=0644 owner=hadoop group=hadoop
+   - name: Create user "hadoop"
+     user:
+       name: 'hadoop'
+       groups: ['wheel', 'admin']
+       shell: /bin/bash
+  
+   - name: Create user "yarn"
+     user:
+       name: 'yarn'
+       groups: ['wheel', 'admin', 'hadoop']
+       shell: /bin/bash
 
+   - authorized_key:
+       user: '{{u}}'
+       state: present
+       key: '{{lookup("file", "keys/id_rsa.pub")}}'
+     with_items: ['hadoop', 'yarn']
+     vars: 
+       u: '{{item}}'
+   
+   - copy: 
+       src: keys/id_rsa 
+       dest: '/home/{{u}}/.ssh/id_rsa' 
+       mode: '0400' 
+       owner: '{{u}}' 
+       group: '{{u}}'
+     with_items: ['hadoop', 'yarn']
+     vars: 
+       u: '{{item}}'
+     
+   - copy: 
+       src: files/profile 
+       dest: '/home/{{u}}/.profile' 
+       mode: '0644' 
+       owner: '{{u}}'
+       group: '{{u}}'
+     with_items: ['hadoop', 'yarn']
+     vars:
+       u: '{{item}}'
+   
+   - template: 
+       src: templates/etc/ssh-config 
+       dest: '/home/{{u}}/.ssh/config' 
+       mode: '0644' 
+       owner: '{{u}}'
+       group: '{{u}}'
+     with_items: ['hadoop', 'yarn']
+     vars:
+       u: '{{item}}'
 

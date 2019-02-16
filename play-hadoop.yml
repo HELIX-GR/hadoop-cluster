@@ -43,10 +43,22 @@
    - name: Set HADOOP_PREFIX in system-wide profile
      copy: src=files/profile.d/set-hadoop-prefix.sh dest=/etc/profile.d/set-hadoop-prefix.sh mode=0744
 
+   - name: Add aliases for common start/stop commands
+     lineinfile: 
+       dest: ~hadoop/.profile 
+       line: 'alias {{item.key}}="{{item.value}}"'
+     with_dict: 
+       'start-dfs': 'start-dfs.sh'
+       'start-yarn': 'start-yarn.sh'
+       'stop-dfs': 'stop-dfs.sh'
+       'stop-yarn': 'stop-yarn.sh'
+     become: yes
+     become_user: hadoop
+ 
    - name: Copy default configuration under /etc/hadoop
      shell: cp -vr -u /usr/local/hadoop/etc/hadoop/* /etc/hadoop/
      become: yes
-     become_user: 'hadoop'
+     become_user: hadoop
    
    - name: Set JAVA_HOME for Hadoop environment
      lineinfile: 

@@ -43,18 +43,24 @@
    - name: Set HADOOP_PREFIX in system-wide profile
      copy: src=files/profile.d/set-hadoop-prefix.sh dest=/etc/profile.d/set-hadoop-prefix.sh mode=0744
 
-   - name: Add aliases for common start/stop commands
+   - name: Add aliases for commands starting/stoping HDFS
      lineinfile: 
-       dest: ~hadoop/.profile 
+       dest: ~hadoop/.profile
        line: 'alias {{item.key}}="{{item.value}}"'
-     with_dict: 
-       'start-dfs': 'start-dfs.sh'
-       'start-yarn': 'start-yarn.sh'
-       'stop-dfs': 'stop-dfs.sh'
-       'stop-yarn': 'stop-yarn.sh'
+     with_dict: { 'start-dfs': 'start-dfs.sh', 'stop-dfs': 'stop-dfs.sh' }
      become: yes
      become_user: hadoop
- 
+     when: '"namenode" in group_names'
+   
+   - name: Add aliases for commands starting/stoping YARN
+     lineinfile:
+       dest: ~yarn/.profile
+       line: 'alias {{item.key}}="{{item.value}}"'
+     with_dict: { 'start-yarn': 'start-yarn.sh', 'stop-yarn': 'stop-yarn.sh' }
+     become: yes
+     become_user: yarn
+     when: '"manager" in group_names'
+
    - name: Copy default configuration under /etc/hadoop
      shell: cp -vr -u /usr/local/hadoop/etc/hadoop/* /etc/hadoop/
      become: yes

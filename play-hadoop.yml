@@ -33,7 +33,7 @@
    - file: path=/var/local/hadoop state=directory mode=0775 owner=hadoop group=hadoop 
    - file: path=/var/local/hadoop/dfs state=directory mode=0775 owner=hadoop group=hadoop 
    - file: path=/var/local/hadoop/logs state=directory mode=0774 owner=hadoop group=hadoop 
-   - file: path=/var/run/hadoop state=directory mode=0774 owner=hadoop group=hadoop 
+   - file: path=/var/local/hadoop/run state=directory mode=0774 owner=hadoop group=hadoop 
    
    - file: path=/etc/hadoop state=directory mode=0775 owner=hadoop group=hadoop 
 
@@ -70,7 +70,7 @@
      lineinfile:
        dest: /etc/hadoop/hadoop-env.sh
        regexp: "^[#]?export\\s+HADOOP_PID_DIR="
-       line: 'export HADOOP_PID_DIR=/var/run/hadoop'
+       line: 'export HADOOP_PID_DIR=/var/local/hadoop/run'
    
    - name: Set HADOOP_LOG_DIR for Hadoop environment
      lineinfile:

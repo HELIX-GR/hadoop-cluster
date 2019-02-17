@@ -54,12 +54,12 @@
   </property>
   <property>
     <name>yarn.scheduler.minimum-allocation-mb</name>
-    <value>1024</value>
+    <value>128</value>
     <description>Minimum limit of memory to allocate to each container request at the Resource Manager.</description>
   </property>
   <property>
     <name>yarn.scheduler.maximum-allocation-mb</name>
-    <value>4096</value>
+    <value>2048</value>
     <description>Maximum limit of memory to allocate to each container request at the Resource Manager.</description>
   </property>
   <property>
@@ -75,13 +75,13 @@
   <!-- Configurations for NodeManager -->
   <property>
     <name>yarn.nodemanager.resource.memory-mb</name>
-    <value>8192</value>
+    <value>2048</value>
     <description>Amount of physical memory, in MB, that can be allocated for containers.</description>
   </property>
   <property>
     <name>yarn.nodemanager.vmem-pmem-ratio</name>
     <value>2.1</value>
-    <description>The virtual memory usage of each task may exceed its physical memory limit by this ratio. The total amount of virtual memory used by tasks on the NodeManager may exceed its physical memory usage by this ratio.</description>
+    <description>Ratio between virtual memory to physical memory when setting memory limits for containers. Container allocations are expressed in terms of physical memory, and virtual memory usage is allowed to exceed this allocation by this ratio.</description>
   </property>
   <property>
     <name>yarn.nodemanager.resource.cpu-vcores</name>
@@ -91,7 +91,7 @@
   <property>
     <name>yarn.nodemanager.local-dirs</name>
     <value>${hadoop.tmp.dir}/nm-local-dir</value>
-    <description>	List of directories to store localized files in. An application's localized file directory will be found in: ${yarn.nodemanager.local-dirs}/usercache/${user}/appcache/application_${appid}. Individual containers' work directories, called container_${contid}, will be subdirectories of this. Comma-separated list of paths on the local filesystem where intermediate data is written. Multiple paths help spread disk i/o.</description>
+    <description>List of directories to store localized files in. An application's localized file directory will be found in: ${yarn.nodemanager.local-dirs}/usercache/${user}/appcache/application_${appid}. Individual containers' work directories, called container_${contid}, will be subdirectories of this. Comma-separated list of paths on the local filesystem where intermediate data is written. Multiple paths help spread disk i/o.</description>
   </property>
   <property>
     <name>yarn.nodemanager.log-dirs</name>

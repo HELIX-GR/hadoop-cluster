@@ -94,6 +94,13 @@
        dest: /etc/hadoop/hadoop-env.sh
        regexp: "^export\\s+HADOOP_STOP_TIMEOUT="
        line: 'export HADOOP_STOP_TIMEOUT={{stop_timeout}}'
+   
+   - name: Set YARN_PID_DIR for Yarn environment
+     lineinfile:
+       dest: /etc/hadoop/yarn-env.sh
+       regexp: "^[#]?export\\s+YARN_PID_DIR="
+       line: 'export YARN_PID_DIR=/var/local/hadoop/run'
+       insertbefore: "^# Resource[\\s]*Manager specific parameters"
 
    - name: Set YARN_LOG_DIR for Yarn environment
      lineinfile:

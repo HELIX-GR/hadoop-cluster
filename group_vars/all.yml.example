@@ -4,3 +4,23 @@ hadoop:
   version: '2.9.2'
   checksum: 'sha256:3D2023C46B1156C1B102461AD08CBC17C8CC53004EAE95DAB40A1F659839F28A'
 
+yarn:
+  
+  # per-container quota
+  quota:
+    memory: 2048
+    vcpus: 2
+  
+  # per-node quota
+  resources:
+    memory: 8192
+    vcpus: 8
+  
+mapreduce:
+
+  # per-task resources
+  quota:
+    mapper:
+      memory: 1024
+    reducer:
+      memory: 1024 

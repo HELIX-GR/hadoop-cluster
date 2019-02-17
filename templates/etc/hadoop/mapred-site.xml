@@ -14,12 +14,12 @@
   </property-->
   <property>
     <name>mapreduce.map.memory.mb</name>
-    <value>256</value>
+    <value>{{mapreduce.quota.mapper.memory}}</value>
     <description>The amount of memory to request from the scheduler for each map task.</description>
   </property>
   <property>
     <name>mapreduce.reduce.memory.mb</name>
-    <value>1536</value>
+    <value>{{mapreduce.quota.reducer.memory}}</value>
     <description>The amount of memory to request from the scheduler for each reduce task.</description>
   </property>
   <property>
@@ -34,15 +34,14 @@
   </property>
   <property>
     <name>mapreduce.reduce.shuffle.parallelcopies</name>
-    <value>6</value>
+    <value>5</value>
     <description>The default number of parallel transfers run by reduce during the copy(shuffle) phase (default is 5). Higher number of parallel copies run by reduces to fetch outputs from very large number of maps.</description>
   </property>
   <!-- Configuration for MapReduce JobHistory Server -->
   <property>
     <name>mapreduce.jobtracker.address</name>
     <value>local</value>
-    <description>The host and port that the MapReduce job tracker runs at.  If "local", then jobs are run in-process as a single map and reduce task.
-        </description>
+    <description>The host and port that the MapReduce job tracker runs at.  If "local", then jobs are run in-process as a single map and reduce task.</description>
   </property>
   <property>
     <name>mapreduce.jobhistory.address</name>

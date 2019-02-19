@@ -22,13 +22,6 @@
      with_items: [ 'vim', 'tree', 'jq', 'curl', 'rsync', 'screen', 'htop', 'bash-completion', 'unzip', 'openjdk-8-jdk-headless' ]
   
    - hostname: name={{hostname}}
-  
-   - name: Update /etc/hosts with local hostname
-     lineinfile:
-       dest: /etc/hosts
-       regexp: '^127\.0\.1\.1'
-       line: '127.0.1.1 {{ansible_hostname}} {{hostname}}'
-       state: present
 
    - name: Update /etc/hosts
      lineinfile:

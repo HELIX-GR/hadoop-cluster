@@ -76,5 +76,13 @@ Vagrant.configure(2) do |config|
     ansible.inventory_path = inventory_file
     ansible.verbose = true
   end
+  
+  config.vm.provision "setup-spark", type: "ansible" do |ansible| 
+    ansible.playbook = 'play-spark.yml'
+    ansible.become = true
+    ansible.become_user = 'root'
+    ansible.inventory_path = inventory_file
+    ansible.verbose = true
+  end
  
 end

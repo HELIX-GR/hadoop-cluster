@@ -1,0 +1,49 @@
+---
+
+ - hosts: manager
+
+   tasks:
+
+   - debug: var=ansible_hostname
+
+   - name: Unpack Spark binaries
+     unarchive:
+       copy: yes
+       src: .data/spark-{{spark.version}}-bin-without-hadoop.tgz
+       dest: /usr/local
+       creates: /usr/local/spark-{{spark.version}}-bin-without-hadoop
+       owner: yarn
+       group: yarn
+   
+   - name: Link to /usr/local/spark
+     file: src=/usr/local/spark-{{spark.version}}-bin-without-hadoop dest=/usr/local/spark state=link   
+   
+   - name: Copy template for Spark environment
+     shell: cp conf/spark-env.sh.template conf/spark-env.sh
+     args:
+       chdir: /usr/local/spark
+       creates: /usr/local/spark/conf/spark-env.sh
+     become: yes
+     become_user: yarn
+   
+   - name: Set SPARK_HOME and paths in system-wide profile
+     copy: src=files/profile.d/set-spark-prefix.sh dest=/etc/profile.d/set-spark-prefix.sh mode=0744
+   
+   - name: Set HADOOP_HOME for Spark environment
+     lineinfile:
+       dest: /usr/local/spark/conf/spark-env.sh
+       regexp: "^HADOOP_HOME="
+       line: 'HADOOP_HOME=/usr/local/hadoop'
+
+   - name: Set HADOOP_CONF_DIR for Spark environment
+     lineinfile:
+       dest: /usr/local/spark/conf/spark-env.sh
+       regexp: "^HADOOP_CONF_DIR="
+       line: 'HADOOP_CONF_DIR=/etc/hadoop'
+   
+   - name: Set SPARK_DIST_CLASSPATH for Spark environment
+     lineinfile:
+       dest: /usr/local/spark/conf/spark-env.sh
+       regexp: "^SPARK_DIST_CLASSPATH="
+       line: 'SPARK_DIST_CLASSPATH=$(/usr/local/hadoop/bin/hadoop classpath)'
+

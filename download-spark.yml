@@ -1,0 +1,15 @@
+---
+
+ - hosts: localhost
+   connection: local
+
+   tasks:
+
+   - file: path=.data state=directory mode=0755 
+
+   - name: Download Spark
+     get_url:
+       url: https://archive.apache.org/dist/spark/spark-{{spark.version}}/spark-{{spark.version}}-bin-without-hadoop.tgz
+       dest: .data/spark-{{spark.version}}-bin-without-hadoop.tgz
+       checksum: '{{spark.checksum}}'
+

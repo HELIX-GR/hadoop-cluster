@@ -42,7 +42,7 @@
    - name: Set JAVA_HOME in system-wide profile
      copy: src=files/profile.d/set-java-home.sh dest=/etc/profile.d/set-java-home.sh mode=0744
    
-   - name: Set HADOOP_PREFIX in system-wide profile
+   - name: Set HADOOP_PREFIX and paths in system-wide profile
      copy: src=files/profile.d/set-hadoop-prefix.sh dest=/etc/profile.d/set-hadoop-prefix.sh mode=0744
 
    - name: Add aliases for commands starting/stoping HDFS

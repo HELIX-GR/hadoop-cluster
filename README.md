@@ -10,10 +10,13 @@ You must install `Ansible` on the control machine, preferably in a virtual Pytho
     . pyenv/bin/activate
     pip install ansible==2.5 netaddr
 
-### 1.2 Download Hadoop
+### 1.2 Download Hadoop + Spark
 
-Play `download-hadoop.yml` to download Hadoop binaries (locally) under `.data`. These binaries will be copied to all machines
-in the cluster (to avoid downloading for each one of them).
+Play `download-hadoop.yml` to download Hadoop binaries under `.data`. 
+
+Play `download-spark.yml` to download Spark binaries (without Hadoop) under `.data`. 
+
+These binaries will be copied to all machines in the cluster (to avoid downloading for each one of them).
 
 ### 1.3 Provide SSH keys
 

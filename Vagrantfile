@@ -46,7 +46,7 @@ Vagrant.configure(2) do |config|
     manager.vm.network "private_network", ip: h['ipv4_address']
     manager.vm.provider "virtualbox" do |vb|
       vb.name = h['fqdn']
-      vb.memory = 1024
+      vb.memory = 1536
     end
 
   end 

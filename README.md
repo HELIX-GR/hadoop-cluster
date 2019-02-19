@@ -24,6 +24,10 @@ Ensure that private key has proper permissions (`0600`).
 
 Copy `hosts.yml.example` to `hosts.yml` and adhust to your needs.
 
+### 1.5 Provide group variables
+
+Copy `group_vars/all.yml.example` to `group_vars/all.yml` and adjust to your needs.
+
 ## 2. Setup
 
 Setup using Vagrant:

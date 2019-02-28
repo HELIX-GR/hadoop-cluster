@@ -34,6 +34,7 @@
    
    - file: path=/var/local/hadoop state=directory mode=0775 owner=hadoop group=hadoop 
    - file: path=/var/local/hadoop/dfs state=directory mode=0775 owner=hadoop group=hadoop 
+   - file: path=/var/local/hadoop/dfs/data state=directory mode=0775 owner=hadoop group=hadoop 
    - file: path=/var/local/hadoop/logs state=directory mode=0774 owner=hadoop group=hadoop 
    - file: path=/var/local/hadoop/run state=directory mode=0774 owner=hadoop group=hadoop 
    

@@ -64,13 +64,13 @@
    - name: Create user "hadoop"
      user:
        name: 'hadoop'
-       groups: ['wheel', 'admin']
+       groups: ['wheel']
        shell: /bin/bash
   
    - name: Create user "yarn"
      user:
        name: 'yarn'
-       groups: ['wheel', 'admin', 'hadoop']
+       groups: ['wheel', 'hadoop']
        shell: /bin/bash
 
    - authorized_key:

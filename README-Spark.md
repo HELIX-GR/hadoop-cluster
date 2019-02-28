@@ -15,6 +15,10 @@ Upload to HDFS, e.g. under `/user/yarn/share/jars`
 
     hdfs dfs -copyFromLocal spark-libs.jar /user/yarn/share/jars/
 
+It is advisable to make these libraries available to all data nodes. For example in a cluster with 4 compute/data nodes:
+
+    hdfs dfs -setrep -w 4 /user/yarn/share/jars
+
 Now, we can pass option `spark.yarn.archive` to Spark referencing the JAR archive we have just created (see next). 
 
 ### 1.2 Submit application

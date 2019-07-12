@@ -10,11 +10,13 @@ You must install `Ansible` on the control machine, preferably in a virtual Pytho
     . pyenv/bin/activate
     pip install ansible==2.5 netaddr
 
-### 1.2 Download Hadoop + Spark
+### 1.2 Download Hadoop + Spark + Livy
 
 Play `download-hadoop.yml` to download Hadoop binaries under `.data`. 
 
-Play `download-spark.yml` to download Spark binaries (without Hadoop) under `.data`. 
+Play `download-spark.yml` to download Spark binaries (without Hadoop) under `.data`.
+
+Play `download-livy.yml` to download Livy binaries under `.data`.
 
 These binaries will be copied to all machines in the cluster (to avoid downloading for each one of them).
 
@@ -46,6 +48,7 @@ If machines are already created (along with SSH connectivity), you can play the 
     ansible-playbook -v -b -u user play-basic.yml
     ansible-playbook -v -b -u user play-hadoop.yml
     ansible-playbook -v -b -u user play-spark.yml
+    ansible-playbook -v -u user play-livy.yml
 
 ## 3. Start/Stop services
 

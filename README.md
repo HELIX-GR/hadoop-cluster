@@ -31,16 +31,20 @@ Copy `hosts.yml.example` to `hosts.yml` and adhust to your needs.
 
 Copy `group_vars/all.yml.example` to `group_vars/all.yml` and adjust to your needs.
 
+### 1.6 Mount HDFS data directories
+
+If HDFS data will be stored externally, setup and mount data directories to be used. These are expected at `/var/local/hadoop/dfs/data` for each data node.
+
 ## 2. Setup
 
 Setup using Vagrant:
 
     vagrant up
 
-If machines are already created (along with SSH connectivity), you can play the Ansible recipes:
+If machines are already created (along with SSH connectivity), you can play the Ansible recipes by connecting as user `user`:
 
-    ansible-playbook -v -b -u vagrant play-basic.yml
-    ansible-playbook -v -b -u vagrant play-hadoop.yml
+    ansible-playbook -v -b -u user play-basic.yml
+    ansible-playbook -v -b -u user play-hadoop.yml
 
 ## 3. Start/Stop services
 

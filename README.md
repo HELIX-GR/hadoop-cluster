@@ -45,6 +45,7 @@ If machines are already created (along with SSH connectivity), you can play the 
 
     ansible-playbook -v -b -u user play-basic.yml
     ansible-playbook -v -b -u user play-hadoop.yml
+    ansible-playbook -v -b -u user play-spark.yml
 
 ## 3. Start/Stop services
 

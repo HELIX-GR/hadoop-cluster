@@ -58,7 +58,29 @@
        dest: ~/opt/livy/conf/livy-env.sh
        regexp: "^LIVY_PID_DIR="
        line: 'LIVY_PID_DIR=~/var/livy'
+   
+   - name: Set CLASSPATH for Livy environment (add Hadoop library JARs)
+     lineinfile:
+       dest: ~/opt/livy/conf/livy-env.sh
+       regexp: "^CLASSPATH="
+       line: 'CLASSPATH=$(/usr/local/hadoop/bin/hadoop classpath)'
+   
+   - name: Set LD_LIBRARY_PATH for Livy environment (to be able to load native Hadoop libraries)
+     lineinfile:
+       dest: ~/opt/livy/conf/livy-env.sh
+       regexp: "^LD_LIBRARY_PATH="
+       line: 'LD_LIBRARY_PATH=/usr/local/hadoop/lib/native'
 
+   - name: Set master (for Spark) in Livy configuration
+     lineinfile:
+        dest: ~/opt/livy/conf/livy.conf
+        regexp: "^[#]?\\s*livy.spark.master\\s*="
+        line: "livy.spark.master = yarn"
 
+   - name: Set deploy mode (for Spark) in Livy configuration
+     lineinfile:
+        dest: ~/opt/livy/conf/livy.conf
+        regexp: "^[#]?\\s*livy.spark.deploy-mode\\s*="
+        line: "livy.spark.deploy-mode = cluster"
 
 

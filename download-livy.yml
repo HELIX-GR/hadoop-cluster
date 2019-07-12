@@ -1,0 +1,15 @@
+---
+
+ - hosts: localhost
+   connection: local
+
+   tasks:
+
+   - file: path=.data state=directory mode=0755 
+
+   - name: Download Livy
+     get_url:
+       url: http://apache.forthnet.gr/incubator/livy/{{livy.version}}/apache-livy-{{livy.version}}-bin.zip
+       dest: .data/apache-livy-{{livy.version}}-bin.zip
+       checksum: '{{livy.checksum}}'
+

@@ -1,0 +1,64 @@
+---
+
+ - hosts: manager
+
+   tasks:
+
+   - debug: var=ansible_hostname
+   - debug: var=ansible_user
+
+   - file: path=~/opt state=directory mode=0775
+   - file: path=~/var state=directory mode=0775
+   - file: path=~/bin state=directory mode=0775
+
+   - name: Unpack Livy binaries
+     unarchive:
+       copy: yes
+       src: .data/apache-livy-{{livy.version}}-bin.zip
+       dest: ~/opt
+       creates: ~/opt/apache-livy-{{livy.version}}-bin
+   
+   - name: Link to /usr/local/livy
+     file: src=~/opt/apache-livy-{{livy.version}}-bin dest=~/opt/livy state=link   
+   
+   - file: path=~/var/livy state=directory mode=0775
+   - file: path=~/var/livy/logs state=directory mode=0775
+   
+   - name: Copy template configuration for Livy
+     shell: cp conf/{{item}}.template conf/{{item}}
+     args:
+       chdir: ~/opt/livy
+       creates: ~/opt/livy/conf/{{item}}
+     with_items:
+     - 'livy-env.sh'
+     - 'livy.conf'
+     - 'log4j.properties'
+     - 'spark-blacklist.conf'
+   
+   - name: Set HADOOP_CONF_DIR for Livy environment
+     lineinfile:
+       dest: ~/opt/livy/conf/livy-env.sh
+       regexp: "^HADOOP_CONF_DIR="
+       line: 'HADOOP_CONF_DIR=/etc/hadoop'
+   
+   - name: Set SPARK_HOME for Livy environment
+     lineinfile:
+       dest: ~/opt/livy/conf/livy-env.sh
+       regexp: "^SPARK_HOME="
+       line: 'SPARK_HOME=/usr/local/spark'
+   
+   - name: Set LIVY_LOG_DIR for Livy environment
+     lineinfile:
+       dest: ~/opt/livy/conf/livy-env.sh
+       regexp: "^LIVY_LOG_DIR="
+       line: 'LIVY_LOG_DIR=~/var/livy/logs'
+   
+   - name: Set LIVY_PID_DIR for Livy environment
+     lineinfile:
+       dest: ~/opt/livy/conf/livy-env.sh
+       regexp: "^LIVY_PID_DIR="
+       line: 'LIVY_PID_DIR=~/var/livy'
+
+
+
+

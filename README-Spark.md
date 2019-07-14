@@ -19,7 +19,15 @@ It is advisable to make these libraries available to all data nodes. For example
 
     hdfs dfs -setrep -w 4 /user/yarn/share/jars
 
-Now, we can pass option `spark.yarn.archive` to Spark referencing the JAR archive we have just created (see next). 
+Now, we can pass option `spark.yarn.archive` to `spark-submit` referencing the JAR archive we have just created.
+It's better to set this as a default, so we edit `/usr/local/spark/conf/spark-defaults.conf` to contain the following:
+
+```
+spark.master yarn
+spark.submit.deployMode cluster
+
+spark.yarn.archive  hdfs:///user/yarn/share/jars/spark-libs.jar
+```
 
 ### 1.2 Submit application
 
@@ -31,6 +39,7 @@ Submit to YARN, in `cluster` mode (or `client` mode):
         --class org.apache.spark.examples.SparkPi \
         $SPARK_HOME/examples/jars/spark-examples.jar 32
 
+Of course, if a proper `spark-defaults.conf` is used, some command-line parameters can be omitted.
 
 #### Notes
 

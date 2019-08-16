@@ -43,7 +43,7 @@
    - name: Set JAVA_HOME in system-wide profile
      copy: src=files/profile.d/set-java-home.sh dest=/etc/profile.d/set-java-home.sh mode=0744
    
-   - name: Set HADOOP_PREFIX in system-wide profile
+   - name: Set Hadoop-related environment variables in system-wide profile
      copy: src=files/profile.d/set-hadoop-prefix.sh dest=/etc/profile.d/set-hadoop-prefix.sh mode=0744
 
    - name: Add aliases for commands starting/stoping HDFS
@@ -137,6 +137,7 @@
      - 'yarn-site.xml'
      - 'mapred-site.xml'
      - 'slaves'
+     - 'httpfs-env.sh'
 
  #
  # Format HDFS filesystem

@@ -46,10 +46,22 @@ Vagrant.configure(2) do |config|
     manager.vm.network "private_network", ip: h['ipv4_address']
     manager.vm.provider "virtualbox" do |vb|
       vb.name = h['fqdn']
-      vb.memory = 1536
+      vb.memory = 1280
     end
-
   end 
+
+  # Define and provision HttpFS nodes
+
+  inventory_groups['httpfs']['hosts'].keys.each do |machine_name|
+    config.vm.define machine_name do |machine|
+      h = inventory_groups['httpfs']['hosts'][machine_name]
+      machine.vm.network "private_network", ip: h['ipv4_address']
+      machine.vm.provider "virtualbox" do |vb|
+         vb.name = h['fqdn']
+         vb.memory = 768
+      end
+    end
+  end
 
   # Provision (common)
   

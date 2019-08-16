@@ -90,6 +90,7 @@
      with_items: ['hadoop', 'yarn']
      vars: 
        u: '{{item}}'
+     when: 'not ("httpfs" in group_names)'
      
    - copy: 
        src: files/profile 
@@ -110,4 +111,5 @@
      with_items: ['hadoop', 'yarn']
      vars:
        u: '{{item}}'
+     when: 'not ("httpfs" in group_names)'
 

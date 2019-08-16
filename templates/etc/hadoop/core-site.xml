@@ -10,4 +10,12 @@
     <value>131072</value>
     <description>Size of read/write buffer used in SequenceFiles</description>
   </property>
+  <property>
+    <name>hadoop.proxyuser.hadoop.hosts</name>
+    <value>{{groups.httpfs| map("extract", hostvars, "fqdn")| join(",")}}</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hadoop.groups</name>
+    <value>*</value>
+  </property>
 </configuration>

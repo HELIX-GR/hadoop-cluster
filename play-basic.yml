@@ -61,10 +61,12 @@
      vars:
        h: '{{hostvars[item]}}'
    
+   - group: name=httpfs state=present
+   
    - name: Create user "hadoop"
      user:
        name: 'hadoop'
-       groups: ['wheel']
+       groups: ['wheel', 'httpfs']
        shell: /bin/bash
   
    - name: Create user "yarn"

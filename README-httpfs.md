@@ -6,7 +6,8 @@ For details, see documentation on [WebHDFS API](https://hadoop.apache.org/docs/c
 
 ## 1. Basic examples on REST operations
 
-In all the following examples, we are impersonating the HDFS user `baz` (using the `user.name` parameter). 
+In all the following examples, the user `hadoop` (who started `HttpFS` service) is impersonating the HDFS user `baz` (using the `user.name` parameter). 
+Note that user `baz` must belong to our group `httpfs` (on namenode and datanodes) for this to be allowed (see configuration for user-proxying in `core-site.xml`). 
 
 List HDFS directory `/user/baz`:
 

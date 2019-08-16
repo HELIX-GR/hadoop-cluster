@@ -129,7 +129,7 @@ See:
  * [User Proxying](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/Superusers.html)
  * [Loading Data into HDFS](https://blogs.oracle.com/datawarehousing/data-loading-into-hdfs-part1)
 
-Start/Stop server:
+As user `hadoop`, start/stop server:
 
     httpfs.sh [start|stop]
 

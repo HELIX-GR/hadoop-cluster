@@ -61,10 +61,12 @@
      vars:
        h: '{{hostvars[item]}}'
    
+   - group: name=httpfs state=present
+   
    - name: Create user "hadoop"
      user:
        name: 'hadoop'
-       groups: ['wheel']
+       groups: ['wheel', 'httpfs']
        shell: /bin/bash
   
    - name: Create user "yarn"
@@ -90,6 +92,7 @@
      with_items: ['hadoop', 'yarn']
      vars: 
        u: '{{item}}'
+     when: 'not ("httpfs" in group_names)'
      
    - copy: 
        src: files/profile 
@@ -110,4 +113,5 @@
      with_items: ['hadoop', 'yarn']
      vars:
        u: '{{item}}'
+     when: 'not ("httpfs" in group_names)'
 

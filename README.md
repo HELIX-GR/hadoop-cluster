@@ -124,4 +124,16 @@ List YARN containers for a given execution:
 
     yarn container -list appattempt_1550497940748_0002_000001
 
+### 3.3 Start/Stop HttpFS
+
+The `HttpFS` gateway is run on machines of group `httpfs`. 
+
+See:
+ * [Setup HttpFS](https://hadoop.apache.org/docs/current/hadoop-hdfs-httpfs/ServerSetup.html)
+ * [User Proxying](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/Superusers.html)
+ * [Loading Data into HDFS](https://blogs.oracle.com/datawarehousing/data-loading-into-hdfs-part1)
+
+As user `hadoop`, start/stop server:
+
+    httpfs.sh [start|stop]
 

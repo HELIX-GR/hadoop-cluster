@@ -37,5 +37,11 @@ all:
           fqdn: datanode-c1-n2.hadoop.internal
           hostname: datanode-c1-n2
           ipv4_address: '10.0.5.26'
-
- 
+    'httpfs':
+      hosts:
+        'httpfs-n1':
+          ansible_host: httpfs-c1-n1.hadoop.internal
+          ansible_port: 22
+          fqdn: httpfs-c1-n1.hadoop.internal 
+          hostname: httpfs-c1-n1
+          ipv4_address: '10.0.5.30'

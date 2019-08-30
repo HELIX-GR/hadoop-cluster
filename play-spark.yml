@@ -26,6 +26,14 @@
      become: yes
      become_user: yarn
    
+   - name: Copy template for spark-submit defaults
+     shell: cp conf/spark-defaults.conf.template conf/spark-defaults.conf
+     args:
+       chdir: /usr/local/spark
+       creates: /usr/local/spark/conf/spark-defaults.conf
+     become: yes
+     become_user: yarn
+
    - name: Set SPARK_HOME and paths in system-wide profile
      copy: src=files/profile.d/set-spark-prefix.sh dest=/etc/profile.d/set-spark-prefix.sh mode=0744
    
@@ -47,3 +55,15 @@
        regexp: "^SPARK_DIST_CLASSPATH="
        line: 'SPARK_DIST_CLASSPATH=$(/usr/local/hadoop/bin/hadoop classpath)'
 
+   - name: Set default master for spark-submit
+     lineinfile:
+       dest: /usr/local/spark/conf/spark-defaults.conf
+       regexp: "^spark.master\\s+"
+       line: 'spark.master yarn'
+   
+   - name: Set default deployMode for spark-submit
+     lineinfile:
+       dest: /usr/local/spark/conf/spark-defaults.conf
+       regexp: "^spark.submit.deployMode\\s+"
+       line: 'spark.submit.deployMode cluster'
+      

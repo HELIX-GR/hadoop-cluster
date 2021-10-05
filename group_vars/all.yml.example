@@ -1,8 +1,10 @@
 ---
 
 hadoop:
-  version: '2.9.2'
-  checksum: 'sha256:3D2023C46B1156C1B102461AD08CBC17C8CC53004EAE95DAB40A1F659839F28A'
+  version: '2.10.1'
+
+hbase:
+  version: '2.4.6'
 
 yarn:
   

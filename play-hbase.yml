@@ -1,0 +1,97 @@
+
+ - hosts: all
+   
+   vars:
+
+     namenode_host: '{{hostvars["namenode"].fqdn}}' 
+     secondarynamenode_host: '{{hostvars["namenode"].fqdn}}'
+     manager_host: '{{hostvars["manager"].fqdn}}'
+     datanode_host: '{{fqdn if ("datanode" in group_names) else "0.0.0.0"}}'
+     datanode_hosts: '{{groups.datanode | map("extract", hostvars, "fqdn") | list}}'
+     number_of_datanodes: '{{groups.datanode | length}}'
+     zookeeper_hosts: '{{ [manager_host] + (datanode_hosts | sort)[0:2] }}'
+
+   tasks:
+
+   - name: Unpack HBase binaries
+     unarchive:
+       copy: yes
+       src: .data/hbase-{{hbase.version}}-bin.tar.gz
+       dest: /usr/local
+       creates: /usr/local/hbase-{{hbase.version}}
+       owner: hadoop
+       group: hadoop
+   
+   - name: Link to /usr/local/hbase
+     file: src=/usr/local/hbase-{{hbase.version}} dest=/usr/local/hbase state=link   
+
+   - file: path=/usr/local/hbase-{{hbase.version}} state=directory owner=hadoop group=hadoop recurse=yes
+   - file: path=/var/local/hbase state=directory mode=0775 owner=hadoop group=hadoop 
+   - file: path=/var/local/hbase/logs state=directory mode=0775 owner=hadoop group=hadoop 
+   - file: path=/var/local/zookeeper state=directory mode=0775 owner=hadoop group=hadoop 
+   - file: path=/var/local/zookeeper/data state=directory mode=0775 owner=hadoop group=hadoop 
+   
+   - name: Update ulimits for num of open files
+     lineinfile:
+       dest: /etc/security/limits.conf
+       regexp: "^hadoop - nofile"
+       line: 'hadoop - nofile 65535'
+       insertbefore: '^# End of file'
+       state: present
+   
+   - name: Update ulimits for num of processes
+     lineinfile:
+       dest: /etc/security/limits.conf
+       regexp: "^hadoop - nproc"
+       line: 'hadoop - nproc 32000'
+       insertbefore: '^# End of file'
+       state: present
+   
+   - name: Set HBASE_HOME in system-wide profile
+     copy: src=files/profile.d/set-hbase-home.sh dest=/etc/profile.d/set-hbase-home.sh mode=0744
+
+   - name: Add aliases for commands starting/stoping HBase
+     lineinfile: 
+       dest: ~hadoop/.profile
+       line: 'alias {{item.key}}="{{item.value}}"'
+     with_dict: { 'start-hbase': 'start-hbase.sh', 'stop-hbase': 'stop-hbase.sh' }
+     become: yes
+     become_user: hadoop
+     when: '"manager" in group_names'
+   
+   - name: Set JAVA_HOME for HBase environment
+     lineinfile: 
+       dest: /usr/local/hbase/conf/hbase-env.sh
+       regexp: "^[#]?[\\s]*export\\s+JAVA_HOME="
+       line: 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64'
+       state: present
+   
+   - name: Set HBASE_LOG_DIR for HBase environment
+     lineinfile: 
+       dest: /usr/local/hbase/conf/hbase-env.sh
+       regexp: "^[#]?[\\s]*export\\s+HBASE_LOG_DIR="
+       line: 'export HBASE_LOG_DIR=/var/local/hbase/logs'
+       state: present
+    
+   - name: Generate configuration for HBase
+     template: src=templates/etc/hbase/{{item}} dest=/usr/local/hbase/conf/{{item}} owner=hadoop group=hadoop backup=yes
+     with_items:
+     - 'hbase-site.xml'
+     - 'regionservers'
+
+   #
+   # NOTE: Some utilities like `hbase rowcounter` need additional libraries in classpath
+   #
+
+   - name: Find JAR for JUL-to-SLF4J
+     shell: >-
+       find /usr/local/hbase/lib -iname 'jul-to-slf4j*.jar'
+     register: find_jul_to_slf4j_jar
+
+   - name: Set HBASE_CLASSPATH (extra classpath entries for HBase binaries)
+     lineinfile:
+       dest: /usr/local/hbase/conf/hbase-env.sh
+       regexp: "^[#]?[\\s]*export\\s+HBASE_CLASSPATH="  
+       line: 'export HBASE_CLASSPATH={{find_jul_to_slf4j_jar.stdout}}'
+       state: present
+

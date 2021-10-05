@@ -1,0 +1,1 @@
+{{groups.datanode | map("extract", hostvars, "fqdn") | join("\n")}}
